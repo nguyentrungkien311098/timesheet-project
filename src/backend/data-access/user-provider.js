@@ -3,6 +3,51 @@ const dateUtils = require("mainam-react-native-date-utils");
 const db = require("../database");
 
 module.exports = {
+  search(page, size, id, name, active, phone, email, role) {
+    return new Promise((resolve, reject) => {
+      try {
+        if (!page)
+          page = 1;
+        if (!size)
+          size = 10;
+        size = parseInt(size);
+        let sql = `select * from tb_user where 1=1 `;
+        let param = [];
+        if (id && id.trim()) {
+          sql += ` and id = '${id}'`;
+        }
+        if (name) {
+          sql += `and name like '%${name}%' `;
+        }
+        if (active !== undefined) {
+          sql += ` and active = ?`;
+          param.push(active == 1 ? true : false)
+        }
+        if (email) {
+          sql += `and email like ? `;
+          param.push('%' + email + '%');
+        }
+        if (phone) {
+          sql += `and phone like '%${phone}%' `;
+        }
+        if (role) {
+          sql += `and role like '%${role}%' `;
+        }
+        sql += ` order by id`
+
+        db.queryWithParam(sql, param, function (err, result) {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(result);
+          }
+        });
+      } catch (error) {
+        console.log(error)
+        reject(error);
+      }
+    })
+  },
   getByEmail(email) {
     return new Promise((resolve, reject) => {
       try {
@@ -93,11 +138,11 @@ module.exports = {
       try {
         const user = await this.getById(id);
         if (user) {
-          let sql = `update  ${TB_TABLE} set 
-                        name=N'${name}', 
-                        birthday=N'${birthday}', 
-                        phone=N'${phone}', 
-                        active=${active}, 
+          let sql = `update  ${TB_TABLE} set
+                        name=N'${name}',
+                        birthday=N'${birthday}',
+                        phone=N'${phone}',
+                        active=${active},
                         lastLogin=N'${lastlogin}' where id=${id}`;
           db.query(sql, function (err, result) {
             if (err) {
@@ -108,14 +153,14 @@ module.exports = {
           });
         } else {
           var sql = `insert into ${TB_TABLE} (
-                        id, 
-                        name, 
-                        active, 
-                        birthday, 
-                        lastLogin, 
-                        phone, 
+                        id,
+                        name,
+                        active,
+                        birthday,
+                        lastLogin,
+                        phone,
                         email,
-                        password) 
+                        password)
                     values (
                         ${id},
                         N'${name}',
@@ -124,7 +169,7 @@ module.exports = {
                         N'${lastlogin}',
                         N'${phone}',
                         N'${email}',
-                        N'${password}',                        
+                        N'${password}',
                         )`;
           db.query(sql, function (err, result) {
             if (err) reject(err);

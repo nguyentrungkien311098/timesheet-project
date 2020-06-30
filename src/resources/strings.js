@@ -13,6 +13,7 @@ module.exports = {
   },
   api: {
     user: {
+      search: "/api/user/search",
       login: "/api/user/login",
       detail: "/api/user/detail"
     },

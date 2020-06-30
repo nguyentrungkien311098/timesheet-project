@@ -57,6 +57,12 @@ function index(props) {
         role: 2,
         menus: [
           {
+            href: "/admin/user",
+            name: "Danh mục tài khoản",
+            filter: "Quản lý danh mục tài khoản user management",
+            i18n: "nav.user-management"
+          },
+          {
             href: "/admin/job",
             name: "Danh mục công việc",
             filter: "Quản lý danh mục công việc job management",
@@ -108,9 +114,9 @@ function index(props) {
     <aside className="page-sidebar">
       <div className="page-logo">
         <a
-          href="#"
-          className={`page-logo-link 
-          press-scale-down 
+          href="/admin"
+          className={`page-logo-link
+          press-scale-down
           d-flex align-items-center position-relative`}
           // data-toggle="modal"
           // data-target="#modal-shortcut"
@@ -120,7 +126,7 @@ function index(props) {
             alt="iSofH Portal"
             aria-roledescription="logo"
           />
-          <span className="page-logo-text mr-1">iSofH Portal</span>
+          <span className="page-logo-text mr-1">Portal</span>
           {/* <span className="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
           <i className="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i> */}
         </a>
@@ -212,10 +218,10 @@ function index(props) {
         <ul className="list-table m-auto nav-footer-buttons">
           <li>
             <a
-              href="https://join.skype.com/PfZdJV1G5B4h"
+              href="https://join.skype.com/invite/Err1Tk50sOcD"
               data-toggle="tooltip"
               data-placement="top"
-              title="Join iSofH Group"
+              title="Chat with me"
               data-original-title="Chat logs"
             >
               <i className="fal fa-comments"></i>
@@ -223,18 +229,18 @@ function index(props) {
           </li>
           <li>
             <a
-              href="mailto:nam.mn@isofh.com"
+              href="mailto:nguyentrungkien311098@gmail.com"
               data-toggle="tooltip"
               data-placement="top"
-              title="Request feature"
-              data-original-title="Request feature"
+              title="Góp ý"
+              data-original-title="Gửi góp ý"
             >
               <i className="fal fa-life-ring"></i>
             </a>
           </li>
           <li>
             <a
-              href="tel:0981111300"
+              href="tel:0327427755"
               data-toggle="tooltip"
               data-placement="top"
               title="Support"

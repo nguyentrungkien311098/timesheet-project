@@ -32,5 +32,17 @@ export default {
           reject(e);
         });
     });
+  },
+  search(page, size, name, active,birthday, phone, email, role){
+    let url = constants.api.user.search + "?";
+    url += "page=" + (page || 1) + "&";
+    url += "size=" + (size || 10) + "&";
+    if (name) url += "name=" + name + "&";
+    if (active !== undefined && active != -1)
+      url += "active=" + (active ? 1 : 0) + "&";
+    if (role) url += "role" + role + "&";
+    if (birthday) url += "birthday=" + birthday + "&";
+    if (phone) url += "phone=" + phone + "&";
+    if (email) url += "email=" + email + "&";
   }
 };

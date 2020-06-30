@@ -34,8 +34,6 @@ module.exports = {
                 });
             } catch (error) {
                 console.log(error)
-
-
                 reject(error);
             }
         })
@@ -64,7 +62,7 @@ module.exports = {
         })
 
     },
-    //reject 0 not found    
+    //reject 0 not found
     getByName(name) {
         return new Promise((resolve, reject) => {
             try {
@@ -109,9 +107,9 @@ module.exports = {
         })
 
     },
-    /*reject 
+    /*reject
         0: not exist
-        1: exist name       
+        1: exist name
     */
 
     createOrEdit(id, name, active) {
@@ -131,8 +129,8 @@ module.exports = {
                             return;
                         }
                     }
-                    let sql = `update  ${TB_TABLE} set 
-                    name=N'${name}', 
+                    let sql = `update  ${TB_TABLE} set
+                    name=N'${name}',
                     updatedDate=N'${createdDate}',
                     active=${active == undefined || active == '0' ? 0 : 1}
                     where id = ${id}`;
@@ -150,10 +148,10 @@ module.exports = {
                         return;
                     }
                     var sql = `insert into ${TB_TABLE} (
-                    name, 
-                    createdDate, 
-                    updatedDate, 
-                    active) 
+                    name,
+                    createdDate,
+                    updatedDate,
+                    active)
                 values (
                     N'${name}',
                     N'${createdDate}',
