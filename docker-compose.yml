@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+
+  isofh_frontend:
+    container_name: timesheet_reactjs_web_develop
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '/node_modules'
+      - /mnt/apps/timesheet_nodejs_service_develop/files:/usr/src/app/uploads-file
+      - /mnt/data/timesheet_nodejs_service_develop/uploads-image:/usr/src/app/uploads-image
+
+    ports:
+      - '9460:3000'
+    environment:
+      - NODE_ENV=production

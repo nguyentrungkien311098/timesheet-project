@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+
+  timesheet_backend:
+    container_name: timesheet_backedn
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '/node_modules'
+      - /mnt/data/uploads-file:/usr/src/app/uploads-file
+      - /mnt/data/uploads-image:/usr/src/app/uploads-image
+    restart: always
+    ports:
+      - '8081:8081'
+    environment:
+      - NODE_ENV=production

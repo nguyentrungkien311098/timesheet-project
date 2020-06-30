@@ -1,0 +1,36 @@
+.pagination-table
+{    display: flex;
+    margin-right: 20px;
+    justify-items: center;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    .label
+   {
+    color: #9FA2B4;
+    margin: 0px !important;
+    padding: 0;
+    margin-right: 30px !important;
+    font-size: 14px;
+   }
+   .btn-next
+   {
+       width: 10px;
+       margin-left:20px;
+       cursor: pointer;
+   }
+   .btn-pre
+   {
+       width: 10px;
+       margin-right: 20px;
+       cursor: pointer;
+   }
+   .current-page
+   {
+       font-weight: bold;
+       padding: 0;
+    font-size: 14px;
+    margin: 0 !important;
+   }
+
+}

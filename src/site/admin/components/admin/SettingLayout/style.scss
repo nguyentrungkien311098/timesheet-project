@@ -1,0 +1,12 @@
+.setting-layout {
+  .settings-panel {
+    .btn::before {
+      top: 2px;
+    }
+    [data-action="theme-update"] {
+      box-shadow: none;
+      outline: none;
+      border: none;
+    }
+  }
+}

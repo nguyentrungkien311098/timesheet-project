@@ -1,0 +1,34 @@
+.page-sidebar {
+  display: flex;
+  .primary-nav {
+    overflow: hidden !important;
+    // padding-right: 4px;
+    flex: 1;
+  }
+  .primary-nav:hover {
+    overflow: auto !important;
+    // padding-right: 0px;
+    // padding-right: 1px;
+  }
+  .primary-nav::-webkit-scrollbar-thumb {
+    background: #868e96 !important;
+    opacity: 0.4 !important;
+    border-radius: 10px;
+  }
+  .primary-nav::-webkit-scrollbar {
+    background: transparent !important;
+  }
+  .primary-nav::-webkit-scrollbar-track-piece {
+    background: transparent !important;
+  }
+
+  .nav-menu {
+    li > ul {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    ul {
+      display: block !important;
+    }
+  }
+}

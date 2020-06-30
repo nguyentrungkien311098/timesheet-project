@@ -1,0 +1,12 @@
+.mn-sortable {
+  cursor: pointer;
+  .icon {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    img {
+      margin: 2px;
+      width: 10px;
+    }
+  }
+}

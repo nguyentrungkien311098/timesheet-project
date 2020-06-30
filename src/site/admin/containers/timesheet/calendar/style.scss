@@ -1,0 +1,37 @@
+.calendar-page {
+  .events {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .events .ant-badge-status {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    text-overflow: ellipsis;
+    font-size: 12px;
+  }
+  .notes-month {
+    text-align: center;
+    font-size: 28px;
+  }
+  .notes-month section {
+    font-size: 28px;
+  }
+
+  .ant-fullcalendar-content::-webkit-scrollbar-thumb {
+    background: #868e96 !important;
+    opacity: 0.4 !important;
+    border-radius: 4px;
+  }
+
+  .ant-fullcalendar-content::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background: rgba(69, 160, 224, 0.11);
+  }
+  .ant-badge-status-text
+  {
+    font-size: 11px;
+  }
+}
