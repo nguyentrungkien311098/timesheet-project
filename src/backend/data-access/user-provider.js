@@ -17,21 +17,24 @@ module.exports = {
           sql += ` and id = '${id}'`;
         }
         if (name) {
-          sql += `and name like '%${name}%' `;
+          sql += ` and name like `;
+          param.push('%' + name +'%');
         }
         if (active !== undefined) {
           sql += ` and active = ?`;
-          param.push(active == 1 ? true : false)
+          param.push(active == 1 ? true : false);
         }
         if (email) {
-          sql += `and email like ? `;
+          sql += ` and email like ? `;
           param.push('%' + email + '%');
         }
         if (phone) {
-          sql += `and phone like '%${phone}%' `;
+          sql += ` and phone like ? `;
+          param.push('%' +phone + '%');
         }
         if (role) {
-          sql += `and role like '%${role}%' `;
+          sql += ` and role like ? `;
+          param.push('%' + role + '%' );
         }
         sql += ` order by id`
 

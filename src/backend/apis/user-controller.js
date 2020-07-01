@@ -15,7 +15,7 @@ module.exports = {
   apis: (app) => {
     return [
       () => {
-        /* 
+        /*
                     code:
                         0: success
                         1: sai username-password
@@ -60,7 +60,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                     code:
                         0: success
                         1: vui long dang nhap
@@ -105,7 +105,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                     code:
                         0: success
                         #: không thành công
@@ -176,7 +176,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                         code:
                             0: success
                             1: error
@@ -202,6 +202,46 @@ module.exports = {
             res.send(responseUtils.build(3, {}, "Vui lòng đăng nhập"));
           }
         });
+      },
+      () => {
+                  // title: tìm kiếm
+                  // code:
+                  // 0: success
+                  // 1: login
+                  // 2: access denied,
+                  // 500: exception
+        let jsonParser = bodyParser.json();
+        app.get(API_SERVICES + "search", jsonParser, function(req,res){
+          try {
+            const user = authUtils.getUser(req.headers);
+            if (user && user.user && user.user.id) {
+              let{page, size, id, name, active, phone, email, role} = req.query;
+              // if (user.user.id != id) {
+              //   res.send(responseUtils.build(1,{}, "Bạn không có quyền"));
+              //   return;
+              // }
+              userProvider
+                .search(page, size, id, name, active, phone, email, role)
+                .then(s => {
+                  let start = (page - 1) * size;
+                  let total = s.length;
+                  let arr = s.filter((item, index) => {
+                    return index >= start && index < start + size;
+                  });
+                  res.send(responseUtils.build(0, { data: arr, total: total }));
+                })
+                .catch(e => {
+                  res.send(responseUtils.build(500, e, "Xảy ra lỗi"));
+                });
+            }
+              else {
+                res.send(responseUtils.build(2, {}, "Vui lòng đăng nhập"));
+              }
+            } catch (error) {
+              console.log(error);
+              res.send(responseUtils.build(500, error, "Xảy ra lỗi"));
+            }
+        })
       },
     ];
   },

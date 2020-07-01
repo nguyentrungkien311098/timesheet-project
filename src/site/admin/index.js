@@ -105,7 +105,14 @@ function index(props) {
         loader: () => import("@admin/containers/product/create"),
         loading: Loading
       })
-    }
+    },
+    {
+      path: ["/admin/user"],
+      component: Loadable({
+        loader: () => import("@admin/containers/usermanager"),
+        loading: Loading
+      })
+    },
   ];
   if (!props.auth || !props.auth.id) {
     props.history.push("/login");

@@ -12,7 +12,7 @@ module.exports = {
   apis: app => {
     return [
       () => {
-        /* 
+        /*
                     title: tìm kiếm
                     code:
                         0: success
@@ -47,7 +47,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                     title: tạo mới category
                     code:
                         0: success
@@ -92,7 +92,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                     title: update timesheet
                     code:
                         0: success
@@ -134,7 +134,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                     title: xóa product
                     code:
                         0: success
@@ -160,7 +160,7 @@ module.exports = {
       },
       ,
       () => {
-        /* 
+        /*
                     title: set my job
                     code:
                         0: success
@@ -190,7 +190,7 @@ module.exports = {
         });
       },
       () => {
-        /* 
+        /*
                     title: get by id
                     code:
                         0: success

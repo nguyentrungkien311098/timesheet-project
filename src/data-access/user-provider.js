@@ -44,5 +44,6 @@ export default {
     if (birthday) url += "birthday=" + birthday + "&";
     if (phone) url += "phone=" + phone + "&";
     if (email) url += "email=" + email + "&";
+    return client.requestApi("get", url, {});
   }
 };
