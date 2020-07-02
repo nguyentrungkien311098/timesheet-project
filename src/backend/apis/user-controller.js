@@ -28,6 +28,7 @@ module.exports = {
           try {
             let user = await userProvider.getByEmail(username);
             if (user && user.password === password) {
+              if(user.active==1){
               let date = new Date();
               date.setDate(date.getDate() + 30);
               user.loginToken = encrypt.encrypt({
@@ -43,6 +44,11 @@ module.exports = {
               delete user.password;
               userProvider.setLastLogin(user.id);
               res.send(responseUtils.build(0, user));
+            } else {
+              res.send(
+                responseUtils.build(2, null, "Tài khoản đã bị vô hiệu hoá")
+              );
+            }
             } else {
               res.send(
                 responseUtils.build(1, null, "Thông tin tài khoản không đúng")
@@ -183,11 +189,12 @@ module.exports = {
                             2: vui lòng đăng nhập
                     */
         let jsonParser = bodyParser.json();
-        app.get("/api/user/detail", jsonParser, function (req, res) {
+        app.get(API_SERVICES + "detail/:id", jsonParser, function (req, res) {
+          let { id } = req.params;
           const user = authUtils.getUser(req.headers);
           if (user && user.user && user.user.id) {
             userProvider
-              .getById(user.user.id)
+              .getById(id)
               .then((s) => {
                 if (s) {
                   res.send(responseUtils.build(0, s));
@@ -242,6 +249,89 @@ module.exports = {
               res.send(responseUtils.build(500, error, "Xảy ra lỗi"));
             }
         })
+      },
+      () => {
+        /*
+                    title: xóa user
+                    code:
+                        0: success
+                        1: error
+                        2: không có dữ liệu
+                */
+
+        let jsonParser = bodyParser.json();
+        app.delete(API_SERVICES + "delete/:id", jsonParser, function(req, res) {
+          let { id } = req.params;
+          userProvider
+            .delete(id)
+            .then(s => {
+              if (s.affectedRows !== 0) {
+                res.send(responseUtils.build(0, s));
+                return;
+              }
+              res.send(responseUtils.build(1, null, "Không có dữ liệu"));
+            })
+            .catch(e => {
+              res.send(responseUtils.build(500, e, "Xảy ra lỗi"));
+            });
+        });
+      },
+      () => {
+        /*
+                    title: tạo mới time sheet
+                    code:
+                        0: success
+                        1: khong ton tai
+                        2: khong co quyen
+                        3: không thành công
+                        4: vui lòng đăng nhập
+                */
+        let jsonParser = bodyParser.json();
+        app.post(API_SERVICES + "create", jsonParser, function(req, res) {
+          try {
+            let {name, active, birthday,lastLogin,phone,email,role,password} = req.body;
+            const user = authUtils.getUser(req.headers);
+            if (user && user.user && user.user.id) {
+              timeSheetProvider
+                .createOrEdit(
+                  user,
+                  null,
+                  name,
+                  active,
+                  birthday,
+                  lastLogin,
+                  phone,
+                  email,
+                  role,
+                  password,
+                )
+                .then(s => {
+                  if (s.affectedRows) {
+                    res.send(
+                      responseUtils.build(0, {
+                        id: s.insertId
+                      })
+                    );
+                  } else {
+                    res.send(responseUtils.build(3, "Thêm không thành công"));
+                  }
+                })
+                .catch(e => {
+                  if (e == 0) {
+                    res.send(responseUtils.build(1, e, "Không tồn tại"));
+                  } else if (e == 1) {
+                    res.send(responseUtils.build(2, e, "Không có quyền"));
+                  }
+                });
+            } else {
+              res.send(responseUtils.build(4, {}, "Vui lòng đăng nhập"));
+            }
+          } catch (error) {
+            console.log(error);
+
+            res.send(responseUtils.build(500, error, "Xảy ra lỗi"));
+          }
+        });
       },
     ];
   },

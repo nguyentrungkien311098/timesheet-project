@@ -59,7 +59,7 @@ function index(props) {
     <AdminPage
       className="mgr-product"
       icon="subheader-icon fal fa-window"
-      header="Quản lý danh mục sản phẩm"  
+      header="Quản lý danh mục sản phẩm"
       subheader="Danh sách các sản phẩm của công ty"
     >
       <Panel
@@ -124,7 +124,7 @@ function index(props) {
                   </div>
                 </div>
               ),
-              width: 500,
+              width: 300,
               dataIndex: "col2",
               key: "col2"
             },

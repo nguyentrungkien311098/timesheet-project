@@ -15,7 +15,8 @@ module.exports = {
     user: {
       search: "/api/user/search",
       login: "/api/user/login",
-      detail: "/api/user/detail"
+      detail: "/api/user/detail",
+      delete: "/api/user/delete"
     },
     product: {
       search: "/api/product/search",

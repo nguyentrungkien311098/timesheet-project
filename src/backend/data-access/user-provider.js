@@ -17,16 +17,17 @@ module.exports = {
           sql += ` and id = '${id}'`;
         }
         if (name) {
-          sql += ` and name like `;
-          param.push('%' + name +'%');
+          sql += ` and name like ? `;
+          param.push('%' +name + '%');
         }
         if (active !== undefined) {
-          sql += ` and active = ?`;
-          param.push(active == 1 ? true : false);
-        }
+          sql += ` and active = ${active == 1 ? true : false}`;
+          // sql += ` and active = ?`;
+          // param.push(active == 1 ? true : false);
+      }
         if (email) {
           sql += ` and email like ? `;
-          param.push('%' + email + '%');
+          param.push('%' +email + '%');
         }
         if (phone) {
           sql += ` and phone like ? `;
@@ -34,7 +35,7 @@ module.exports = {
         }
         if (role) {
           sql += ` and role like ? `;
-          param.push('%' + role + '%' );
+          param.push('%' +role + '%' );
         }
         sql += ` order by id`
 
@@ -114,6 +115,23 @@ module.exports = {
           else resolve(result);
         }
       );
+    });
+  },
+  delete(id) {
+    return new Promise((resolve, reject) => {
+      try {
+        let sql = `delete from ${TB_TABLE} where id = '${id}'`;
+        db.query(sql, function (err, result) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        reject(error);
+      }
     });
   },
 

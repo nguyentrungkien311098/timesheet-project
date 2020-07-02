@@ -6,10 +6,20 @@ import Table from "@components/common/Table";
 import Card from "@components/common/Card";
 import SelectSize from "@components/common/SelectSize";
 import Pagination from "@components/common/Pagination";
-import { Form, Button, Select, Tooltip } from "antd";
+import { DatePicker, Button, Select, Tooltip } from "antd";
+import moment from 'moment';
 import ic_reset from "@images/icon/ic_reset.png";
+import DataContants from "../../../../contants/data-contants";
 const { Option } = Select;
 function index(props) {
+  const getRole = (item) => {
+    var role = DataContants.typeRole.filter((data) => {
+        return parseInt(data.id) === Number(item)
+    })
+    if (role.length > 0)
+        return role[0];
+    return {};
+  }
   const onSizeChange = size => {
     props.onSizeChange(size);
   };
@@ -30,10 +40,18 @@ function index(props) {
       col3: item.active,
       col4: item.phone,
       col5: item.email,
-      col6: item.role,
-      col7: item,
+      col6: item.birthday ? moment(item.birthday).format("DD-MM-YYYY") : null,
+      col7: getRole(item.role) ? getRole(item.role).name : null,
+      col8: item,
     };
   });
+
+  const viewDetail = item => () => {
+    props.history.push("/admin/user/detail/" + item.id);
+  }
+  const onDeleteItem = item => () => {
+    props.onDeleteItem(item);
+  };
 
   return (
     <AdminPage
@@ -72,7 +90,7 @@ function index(props) {
                   ></div>
                 </div>
               ),
-              width: 100,
+              width: 80,
               dataIndex: "col1",
               key: "col1"
             },
@@ -84,17 +102,17 @@ function index(props) {
                     <div className="search-box">
                       <img src={require("@images/icon/ic-search.png")} />
                       <input
-                        // value={props.searchName}
-                        // onChange={e =>
-                        //   props.onSearch(e.target.value, props.searchActive)
-                        // }
+                        value={props.searchNameUser}
+                        onChange={e =>
+                          props.onSearch(e.target.value, "name")
+                        }
                         placeholder="Tìm theo tên nhân viên"
                       />
                     </div>
                   </div>
                 </div>
               ),
-              width: 300,
+              width: 280,
               dataIndex: "col2",
               key: "col2"
             },
@@ -102,16 +120,12 @@ function index(props) {
               title: (
                 <div className="custome-header">
                   <div className="title-box">Trạng thái</div>
-                  <div className="addition-box"
-
-                    >
+                  <div className="addition-box">
                     <Select
-                    style={{width:"80%"}}
-                      // value={props.searchActive}
-                      // onChange={e => {
-                      //   props.onSearch(props.searchName, e);
-                      // }}
-                      defaultValue="TẤT CẢ"
+                      value={props.searchActive}
+                      onChange={e => {
+                        props.onSearch(e, "active")
+                      }}
                     >
                       <Option value={-1}>TẤT CẢ</Option>
                       <Option value={1}>ACTIVE</Option>
@@ -141,7 +155,18 @@ function index(props) {
               title: (
                 <div className="custome-header">
                   <div className="title-box">Số điện thoại</div>
-                  <div className="addition-box"></div>
+                  <div className="addition-box">
+                    <div className="search-box">
+                      <img src={require("@images/icon/ic-search.png")} />
+                      <input
+                        value={props.searchPhone}
+                        onChange={e =>
+                          props.onSearch(e.target.value, "phone")
+                        }
+                        placeholder="Tìm theo SĐT"
+                      />
+                    </div>
+                  </div>
                 </div>
               ),
               width: 200,
@@ -156,19 +181,30 @@ function index(props) {
                     <div className="search-box">
                       <img src={require("@images/icon/ic-search.png")} />
                       <input
-                        // value={props.searchName}
-                        // onChange={e =>
-                        //   props.onSearch(e.target.value, props.searchActive)
-                        // }
+                        value={props.searchEmail}
+                        onChange={e =>
+                          props.onSearch(e.target.value, "email")
+                        }
                         placeholder="Tìm theo email"
                       />
                     </div>
                   </div>
                 </div>
               ),
-              width: 200,
+              width: 250,
               dataIndex: "col5",
               key: "col5"
+            },
+            {
+              title: (
+                <div className="custome-header">
+                  <div className="title-box">Ngày sinh</div>
+                  <div className="addition-box"></div>
+                </div>
+              ),
+              width: 200,
+              dataIndex: "col6",
+              key: "col6"
             },
             {
               title: (
@@ -179,8 +215,8 @@ function index(props) {
               ),
               align: 'center',
               width: 200,
-              dataIndex: "col6",
-              key: "col6"
+              dataIndex: "col7",
+              key: "col7"
             },
             {
               title: (
@@ -198,7 +234,7 @@ function index(props) {
                     <Tooltip placement="topLeft" title={"Xem chi tiết"}>
                       <div>
                         <a
-                          // onClick={viewDetail(item)}
+                          onClick={viewDetail(item)}
                           class="btn btn-info btn-icon waves-effect waves-themed"
                         >
                           <i class="fal fa-eye"></i>
@@ -218,7 +254,7 @@ function index(props) {
                     <Tooltip placement="topLeft" title={"Xóa"}>
                       <div>
                         <a
-                          // onClick={onDeleteItem(item)}
+                          onClick={onDeleteItem(item)}
                           class="btn btn-info btn-icon waves-effect waves-themed"
                         >
                           <i class="fal fa-trash-alt"></i>
@@ -238,8 +274,8 @@ function index(props) {
                   </div>
                 );
               },
-              dataIndex: "col7",
-              key: "col7"
+              dataIndex: "col8",
+              key: "col8"
             }
           ]}
           dataSource={data}
@@ -261,21 +297,23 @@ function index(props) {
 
 export default connect(
   state => {
-    debugger
     return {
       auth: state.auth.auth,
+      id: state.usermanager.id,
       data: state.usermanager.data || [],
       size: state.usermanager.size || 10,
       page: state.usermanager.page || 1,
       total: state.usermanager.total || 0,
-      // searchName: state.user.searchName,
-      // searchActive: state.user.searchActive
+      searchNameUser: state.usermanager.searchNameUser,
+      searchActive: state.usermanager.searchActive,
+      searchPhone: state.usermanager.searchPhone,
+      searchEmail: state.usermanager.searchEmail,
     };
   },
   {
     onSearch: actionUsermanager.onSearch,
     onPageChange: actionUsermanager.onPageChange,
     onSizeChange: actionUsermanager.onSizeChange,
-
+    onDeleteItem: actionUsermanager.onDeleteItem,
   }
 )(index);

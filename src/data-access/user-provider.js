@@ -5,6 +5,12 @@ import datacacheProvider from "./datacache-provider";
 import clientUtils from "../utils/client-utils";
 
 export default {
+
+  getById(id) {
+    let url = constants.api.user.detail + "/" + id;
+    return client.requestApi("get", url, {});
+  },
+
   login(username, password) {
     let object = {
       username,
@@ -33,14 +39,20 @@ export default {
         });
     });
   },
-  search(page, size, name, active,birthday, phone, email, role){
+  delete(id) {
+    return client.requestApi(
+      "delete",
+      constants.api.user.delete + "/" + id,
+      {}
+    );
+  },
+  search(page, size, name, active,birthday, phone, email){
     let url = constants.api.user.search + "?";
     url += "page=" + (page || 1) + "&";
     url += "size=" + (size || 10) + "&";
     if (name) url += "name=" + name + "&";
     if (active !== undefined && active != -1)
       url += "active=" + (active ? 1 : 0) + "&";
-    if (role) url += "role" + role + "&";
     if (birthday) url += "birthday=" + birthday + "&";
     if (phone) url += "phone=" + phone + "&";
     if (email) url += "email=" + email + "&";

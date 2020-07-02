@@ -23,6 +23,7 @@ module.exports = withCSS(withSass(withImages(withSourceMaps({
     config.resolve.alias['@redux-store'] = path.join(__dirname, 'src/redux-store')
     config.resolve.alias['@actions'] = path.join(__dirname, 'src/redux-store/actions')
     config.resolve.alias['@hook'] = path.join(__dirname, 'src/hook')
+    config.resolve.alias['@contants'] = path.join(__dirname, 'src/contants')
     return config
   },
   // exportPathMap: async function (defaultPathMap) {

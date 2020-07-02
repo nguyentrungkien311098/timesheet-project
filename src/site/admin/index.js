@@ -113,6 +113,13 @@ function index(props) {
         loading: Loading
       })
     },
+    {
+      path: ["/admin/user/detail/:id"],
+      component: Loadable({
+        loader: () => import("@admin/containers/usermanager/detail"),
+        loading: Loading
+      })
+    },
   ];
   if (!props.auth || !props.auth.id) {
     props.history.push("/login");

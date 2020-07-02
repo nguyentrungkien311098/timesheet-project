@@ -24,18 +24,6 @@ function index(props) {
       });
     }
   }, []);
-
-  let data = (props.data || []).map((item, index) => {
-    return {
-      key: index,
-      col1: (props.page - 1) * props.size + index + 1,
-      col2: item.name,
-      col3: item.active,
-      col4: item.updatedDate.toDateObject().format("dd/MM/yyyy HH:mm:ss"),
-      col5: item
-    };
-  });
-
   const onClose = () => () => {
     props.history.push("/admin/product");
   };

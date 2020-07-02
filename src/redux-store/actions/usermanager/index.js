@@ -23,14 +23,21 @@ function onSizeChange(size) {
   };
 }
 
-function onSearch(name, status) {
+function onSearch(data, action) {
   return (dispatch, getState) => {
-    if (name === undefined && status === undefined) {
+    let searchNameUser = action === "name" ? data : getState().usermanager.searchNameUser;
+    let searchActive = action === "active" ? data : getState().usermanager.searchActive;
+    let searchPhone = action === "phone" ? data : getState().usermanager.searchPhone;
+    let searchEmail = action === "email" ? data : getState().usermanager.searchEmail;
+    if (searchNameUser === undefined && searchActive === undefined && searchPhone === undefined
+      && searchEmail === undefined) {
     } else {
       dispatch(
         updateData({
-          searchName: name,
-          searchActive: status
+          searchNameUser: searchNameUser,
+          searchActive: searchActive,
+          searchPhone: searchPhone,
+          searchEmail: searchEmail,
         })
       );
     }
@@ -59,8 +66,13 @@ function gotoPage(page) {
   return (dispatch, getState) => {
     dispatch(updateData({ page: page }));
     let size = getState().usermanager.size || 10;
+    let name = getState().usermanager.searchNameUser;
+    let active = getState().usermanager.searchActive;
+    let phone = getState().usermanager.searchPhone;
+    let email = getState().usermanager.searchEmail;
+    let birthday = getState().usermanager.birthday;
     userProvider
-      .search(page, size)
+      .search(page, size, name, active,birthday, phone, email, undefined)
       .then(s => {
         dispatch(
           updateData({
@@ -72,10 +84,90 @@ function gotoPage(page) {
   };
 }
 
+function loadDetail(id) {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      userProvider
+        .getById(id)
+        .then(s => {
+          if (s && s.code == 0 && s.data) {
+            dispatch(
+              updateData({
+                id: s.data.id,
+                name: s.data.name,
+                active: s.data.active,
+                phone: s.data.phone,
+                email: s.data.email,
+                birthday: s.data.birthday,
+                role: s.data.role,
+                lastLogin: s.data.lastLogin,
+              })
+            );
+            resolve(s.data);
+            return;
+          }
+          snackbar.show("Không tìm thấy kết quả phù hợp", "danger");
+          reject(s);
+        })
+        .catch(e => {
+          snackbar.show(
+            e && e.message ? e.message : "Xảy ra lỗi, vui lòng thử lại sau",
+            "danger"
+          );
+          reject(e);
+        });
+    });
+  };
+}
+
+function onDeleteItem(item) {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      confirm({
+        title: "Xác nhận",
+        content: `Bạn có muốn xóa user này?`,
+        okText: "Xóa",
+        okType: "danger",
+        cancelText: "Hủy",
+        onOk() {
+          userProvider
+            .delete(item.id)
+            .then(s => {
+              if (s.code == 0) {
+                let data = (getState().usermanager.data || []).filter(
+                  item2 => item2.id != item.id
+                );
+                dispatch(
+                  updateData({
+                    data: data
+                  })
+                );
+                snackbar.show("Xóa thành công", "success");
+                resolve();
+              } else {
+                snackbar.show("Xóa không thành công", "danger");
+                reject();
+              }
+            })
+            .catch(e => {
+              snackbar.show("Xóa không thành công", "danger");
+              reject();
+            });
+        },
+        onCancel() {
+          reject();
+        }
+      });
+    });
+  };
+}
+
 export default {
   gotoPage,
   updateData,
   onSizeChange,
   onSearch,
-  loadListAccount
+  loadListAccount,
+  loadDetail,
+  onDeleteItem,
 }
