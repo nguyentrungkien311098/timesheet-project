@@ -278,59 +278,114 @@ module.exports = {
       },
       () => {
         /*
-                    title: tạo mới time sheet
+                    title: tạo mới category
                     code:
                         0: success
-                        1: khong ton tai
-                        2: khong co quyen
-                        3: không thành công
-                        4: vui lòng đăng nhập
+                        1: khong ton tai id
+                        2: da ton tai email
+                        3: loi
                 */
         let jsonParser = bodyParser.json();
         app.post(API_SERVICES + "create", jsonParser, function(req, res) {
           try {
-            let {name, active, birthday,lastLogin,phone,email,role,password} = req.body;
-            const user = authUtils.getUser(req.headers);
-            if (user && user.user && user.user.id) {
-              timeSheetProvider
-                .createOrEdit(
-                  user,
-                  null,
-                  name,
-                  active,
-                  birthday,
-                  lastLogin,
-                  phone,
-                  email,
-                  role,
-                  password,
-                )
-                .then(s => {
-                  if (s.affectedRows) {
-                    res.send(
-                      responseUtils.build(0, {
-                        id: s.insertId
-                      })
-                    );
-                  } else {
-                    res.send(responseUtils.build(3, "Thêm không thành công"));
-                  }
-                })
-                .catch(e => {
-                  if (e == 0) {
-                    res.send(responseUtils.build(1, e, "Không tồn tại"));
-                  } else if (e == 1) {
-                    res.send(responseUtils.build(2, e, "Không có quyền"));
-                  }
-                });
-            } else {
-              res.send(responseUtils.build(4, {}, "Vui lòng đăng nhập"));
-            }
+            let { name, active, birthday,phone,email,role,password } = req.body;
+            userProvider
+              .createOrEdit(null, name, active, birthday,phone,email,role,password)
+              .then(s => {
+                if (s.affectedRows) {
+                  res.send(
+                    responseUtils.build(0, {
+                      id: s.insertId
+                    })
+                  );
+                } else {
+                  res.send(responseUtils.build(3, "Thêm không thành công"));
+                }
+              })
+              .catch(e => {
+                if (e == 0) {
+                  res.send(responseUtils.build(1, e, "Không tồn tại"));
+                } else if (e == 1) {
+                  res.send(
+                    responseUtils.build(2, e, "Đã tồn tại email này")
+                  );
+                } else {
+                  res.send(responseUtils.build(500, e, "Xảy ra lỗi"));
+                }
+              });
           } catch (error) {
             console.log(error);
 
             res.send(responseUtils.build(500, error, "Xảy ra lỗi"));
           }
+        });
+      },
+      () => {
+        /*
+                    title: update user
+                    code:
+                        0: success
+                        1: khong ton tai id
+                        2: không thành công
+                */
+        let jsonParser = bodyParser.json();
+        app.put(API_SERVICES + "update/:id", jsonParser, function(req, res) {
+          try {
+            let {id} = req.params;
+            if (!id) {
+              res.send(responseUtils.build(1, err, "Không tồn tại"));
+              return;
+            }
+            let {name, active, birthday,phone,email,role,password} = req.body;
+            userProvider
+              .createOrEdit(id, name, active, birthday,phone,email,role,password)
+              .then(s => {
+                if (s.affectedRows) {
+                  res.send(responseUtils.build(0, s[0]));
+                } else {
+                  res.send(responseUtils.build(2, "sửa không thành công"));
+                }
+              })
+              .catch(e => {
+                if (e == 0) {
+                  res.send(responseUtils.build(1, e, "Không tồn tại"));
+                } else if (e == 1) {
+                  res.send(responseUtils.build(2, e, "Không có quyền"));
+                } else {
+                  res.send(responseUtils.build(500, e, "Xảy ra lỗi"));
+                }
+              });
+          } catch (error) {
+            console.log(error);
+
+            res.send(responseUtils.build(500, error, "Xảy ra lỗi"));
+          }
+        });
+      },
+      () => {
+        /*
+                    title: reset user
+                    code:
+                        0: success
+                        1: error
+                        2: không có dữ liệu
+                */
+
+        let jsonParser = bodyParser.json();
+        app.put(API_SERVICES + "reset/:id", jsonParser, function(req, res) {
+          let { id } = req.params;
+          userProvider
+            .resetpassword(id)
+            .then(s => {
+              if (s.affectedRows !== 0) {
+                res.send(responseUtils.build(0, s));
+                return;
+              }
+              res.send(responseUtils.build(1, null, "Không có dữ liệu"));
+            })
+            .catch(e => {
+              res.send(responseUtils.build(500, e, "Xảy ra lỗi"));
+            });
         });
       },
     ];

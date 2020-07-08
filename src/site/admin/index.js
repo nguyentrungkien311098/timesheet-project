@@ -120,6 +120,20 @@ function index(props) {
         loading: Loading
       })
     },
+    {
+      path: ["/admin/user/edit/:id", "/admin/user/create"],
+      component: Loadable({
+        loader: () => import("@admin/containers/usermanager/create"),
+        loading: Loading
+      })
+    },
+    {
+      path: ["/admin/changepassword"],
+      component: Loadable({
+        loader: () => import("@admin/containers/changepassword"),
+        loading: Loading
+      })
+    },
   ];
   if (!props.auth || !props.auth.id) {
     props.history.push("/login");

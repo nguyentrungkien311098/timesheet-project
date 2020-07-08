@@ -46,6 +46,14 @@ export default {
       {}
     );
   },
+  reset(id){
+    debugger
+    return client.requestApi(
+      "put",
+      constants.api.user.reset + "/" + id,
+      {}
+    );
+  },
   search(page, size, name, active,birthday, phone, email){
     let url = constants.api.user.search + "?";
     url += "page=" + (page || 1) + "&";
@@ -57,5 +65,28 @@ export default {
     if (phone) url += "phone=" + phone + "&";
     if (email) url += "email=" + email + "&";
     return client.requestApi("get", url, {});
-  }
+  },
+  createOrEdit(id, name, active, phone, email, birthday, role, password) {
+    if (!id) {
+      let url = constants.api.user.create;
+      return client.requestApi("post", url, {
+        name,
+        active: active ? 1 : 0,
+        phone,
+        email,
+        birthday,
+        role,
+        password: password.toMd5(),
+      });
+    } else {
+      let url = constants.api.user.update + "/" + id;
+      return client.requestApi("put", url, {
+        name,
+        active: active ? 1 : 0,
+        phone,
+        birthday,
+        role,
+      });
+    }
+  },
 };

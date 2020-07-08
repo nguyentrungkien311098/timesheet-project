@@ -162,6 +162,86 @@ function onDeleteItem(item) {
   };
 }
 
+function resetPassword(item) {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      confirm({
+        title: "Xác nhận",
+        content: `Bạn có muốn reset password cho user này?`,
+        okText: "reset",
+        okType: "danger",
+        cancelText: "Hủy",
+        onOk() {
+          userProvider
+            .reset(item.id)
+            .then(s => {
+                snackbar.show("Reset thành công", "success");
+                reject();
+            })
+            .catch(e => {
+              snackbar.show("Reset không thành công", "danger");
+              reject();
+            });
+        },
+        onCancel() {
+          reject();
+        }
+      });
+    });
+  };
+}
+
+function createOrEdit() {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      let id = getState().usermanager.id;
+      let name = getState().usermanager.name;
+      let active = getState().usermanager.active;
+      let phone = getState().usermanager.phone;
+      let email = getState().usermanager.email;
+      let birthday = getState().usermanager.birthday;
+      let role = getState().usermanager.role;
+      let password = getState().usermanager.password;
+      userProvider
+        .createOrEdit(id, name, active, phone, email, birthday, role, password)
+        .then(s => {
+          if (s.code == 0) {
+            dispatch(
+              updateData({
+                id: "",
+                name: "",
+                active: "",
+                phone: "",
+                email: "",
+                birthday: "",
+                role: "",
+                password: "",
+              })
+            );
+            if (!id) {
+              snackbar.show("Thêm thành công", "success");
+            } else {
+              snackbar.show("Cập nhật thành công", "success");
+            }
+            dispatch(loadListAccount());
+            resolve(s.data);
+          } else {
+            if (!id) {
+              snackbar.show(s.message || "Thêm không thành công", "danger");
+            } else {
+              snackbar.show(s.message || "Sửa không thành công", "danger");
+            }
+            reject();
+          }
+        })
+        .catch(e => {
+          snackbar.show("Thêm không thành công", "danger");
+          reject();
+        });
+    });
+  };
+}
+
 export default {
   gotoPage,
   updateData,
@@ -170,4 +250,6 @@ export default {
   loadListAccount,
   loadDetail,
   onDeleteItem,
+  createOrEdit,
+  resetPassword,
 }

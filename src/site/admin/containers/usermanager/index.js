@@ -53,6 +53,26 @@ function index(props) {
     props.onDeleteItem(item);
   };
 
+  const onResetPassword = item => () => {
+    props.resetPassword(item);
+  };
+
+  const editItem = item => () =>{
+    props.history.push("/admin/user/edit/" + item.id);
+  }
+  const showCreate = () => {
+    props.updateData({
+      id: null,
+      name: "",
+      active: true,
+      phone: "",
+      email: "",
+      birthday: "",
+      role: "",
+      password: "",
+    });
+    props.history.push("/admin/user/create");
+  };
   return (
     <AdminPage
       className="mgr-user"
@@ -66,7 +86,7 @@ function index(props) {
         allowCollapse={false}
         toolbar={
           <div className="toolbar">
-            <Button className="button">
+            <Button className="button" onClick={showCreate}>
               Thêm mới
             </Button>
           </div>
@@ -97,6 +117,28 @@ function index(props) {
             {
               title: (
                 <div className="custome-header">
+                  <div className="title-box">Email</div>
+                  <div className="addition-box">
+                    <div className="search-box">
+                      <img src={require("@images/icon/ic-search.png")} />
+                      <input
+                        value={props.searchEmail}
+                        onChange={e =>
+                          props.onSearch(e.target.value, "email")
+                        }
+                        placeholder="Tìm theo email"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ),
+              width: 250,
+              dataIndex: "col5",
+              key: "col5"
+            },
+            {
+              title: (
+                <div className="custome-header">
                   <div className="title-box">Tên nhân viên</div>
                   <div className="addition-box">
                     <div className="search-box">
@@ -122,6 +164,7 @@ function index(props) {
                   <div className="title-box">Trạng thái</div>
                   <div className="addition-box">
                     <Select
+                      style={{width:'80%'}}
                       value={props.searchActive}
                       onChange={e => {
                         props.onSearch(e, "active")
@@ -176,28 +219,6 @@ function index(props) {
             {
               title: (
                 <div className="custome-header">
-                  <div className="title-box">Email</div>
-                  <div className="addition-box">
-                    <div className="search-box">
-                      <img src={require("@images/icon/ic-search.png")} />
-                      <input
-                        value={props.searchEmail}
-                        onChange={e =>
-                          props.onSearch(e.target.value, "email")
-                        }
-                        placeholder="Tìm theo email"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ),
-              width: 250,
-              dataIndex: "col5",
-              key: "col5"
-            },
-            {
-              title: (
-                <div className="custome-header">
                   <div className="title-box">Ngày sinh</div>
                   <div className="addition-box"></div>
                 </div>
@@ -244,7 +265,7 @@ function index(props) {
                     <Tooltip placement="topLeft" title={"Sửa"}>
                       <div>
                         <a
-                          // onClick={editItem(item)}
+                          onClick={editItem(item)}
                           class="btn btn-info btn-icon waves-effect waves-themed"
                         >
                           <i class="fal fa-edit"></i>
@@ -264,7 +285,7 @@ function index(props) {
                     <Tooltip placement="topLeft" title={"Reset password"}>
                         <div>
                           <a
-                            // onClick={() => duyetDungCu(item)}
+                            onClick={onResetPassword(item)}
                             className="btn btn-info btn-icon waves-effect waves-themed"
                           >
                             <img className="" style={{maxWidth: "16px"}} src={ic_reset}  alt=""></img>
@@ -315,5 +336,7 @@ export default connect(
     onPageChange: actionUsermanager.onPageChange,
     onSizeChange: actionUsermanager.onSizeChange,
     onDeleteItem: actionUsermanager.onDeleteItem,
+    updateData: actionUsermanager.updateData,
+    resetPassword: actionUsermanager.resetPassword,
   }
 )(index);

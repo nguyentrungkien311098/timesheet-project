@@ -139,7 +139,7 @@ export default connect(
       email: state.usermanager.email,
       birthday: state.usermanager.birthday && moment(state.usermanager.birthday).format("DD/MM/YYYY") || null,
       role: state.usermanager.role,
-      lastLogin: state.usermanager.lastLogin && moment(state.usermanager.lastLogin).format("DD/MM/YYYY") || null,
+      lastLogin: state.usermanager.lastLogin && moment(state.usermanager.lastLogin).format("DD/MM/YYYY HH:mm:ss") || null,
     }
   },
   {

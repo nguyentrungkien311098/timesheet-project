@@ -37,7 +37,7 @@ module.exports = {
           sql += ` and role like ? `;
           param.push('%' +role + '%' );
         }
-        sql += ` order by id`
+        sql += ` order by id DESC`
 
         db.queryWithParam(sql, param, function (err, result) {
           if (err) {
@@ -117,6 +117,27 @@ module.exports = {
       );
     });
   },
+
+  resetpassword(id){
+    return new Promise(async (resolve, reject) => {
+      try{
+        let sql = `update ${TB_TABLE} set password=N'e10adc3949ba59abbe56e057f20f883e' where id = ${id}`;
+        db.query(sql, function (err, result) {
+          if (err) {
+            reject(err);
+          } else {
+            if (result.length) resolve(result[0]);
+            else resolve(null);
+          }
+        });
+      }
+      catch (error) {
+        console.log(error);
+        reject(error);
+      }
+    })
+  },
+
   delete(id) {
     return new Promise((resolve, reject) => {
       try {
@@ -144,64 +165,94 @@ module.exports = {
       });
     });
   },
-  createOrEdit(
-    id,
-    name,
-    birthday,
-    phone,
-    email,
-    lastlogin,
-    active,
-    password,
-    avatar
-  ) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const user = await this.getById(id);
-        if (user) {
-          let sql = `update  ${TB_TABLE} set
-                        name=N'${name}',
-                        birthday=N'${birthday}',
-                        phone=N'${phone}',
-                        active=${active},
-                        lastLogin=N'${lastlogin}' where id=${id}`;
-          db.query(sql, function (err, result) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
-            }
-          });
-        } else {
-          var sql = `insert into ${TB_TABLE} (
-                        id,
-                        name,
-                        active,
-                        birthday,
-                        lastLogin,
-                        phone,
-                        email,
-                        password)
-                    values (
-                        ${id},
-                        N'${name}',
-                        ${active},
-                        N'${birthday}',
-                        N'${lastlogin}',
-                        N'${phone}',
-                        N'${email}',
-                        N'${password}',
-                        )`;
-          db.query(sql, function (err, result) {
-            if (err) reject(err);
-            else resolve(result);
-          });
-        }
-      } catch (error) {
-        console.log(error);
+  getByEmail(email) {
+        return new Promise((resolve, reject) => {
+            try {
+                let sql = `select * from ${TB_TABLE} where email=N'${email}'`;
+                db.query(sql, function (err, result) {
+                    if (err) {
+                        reject(err)
+                    }
+                    else {
+                        if (result.length)
+                            resolve(result[0]);
+                        resolve(null);
+                    }
+                });
+            } catch (error) {
+                console.log(error)
 
-        reject(error);
-      }
-    });
+
+                reject(error);
+            }
+        })
+    },
+  createOrEdit(id, name, active, birthday,phone,email,role,password) {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (id) {
+                let user = await this.getById(id);
+                if (!user) {
+                    reject(0);
+                    return;
+                }
+                if (email!= user.email) {
+                    user = await this.getByEmail(email);
+                    if (user) {
+                        reject(1);
+                        return;
+                    }
+                }
+                let sql = `update  ${TB_TABLE} set
+                name=N'${name}',
+                phone=N'${phone}',
+                birthday=N'${birthday}',
+                role=N'${role}',
+                active=${active == undefined || active == '0' ? 0 : 1}
+                where id = ${id}`;
+                db.query(sql, function (err, result) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            } else {
+                let user = await this.getByEmail(email);
+                if (user) {
+                    reject(1);
+                    return;
+                }
+                var sql = `insert into ${TB_TABLE} (
+                name,
+                phone,
+                birthday,
+                email,
+                role,
+                password,
+                active)
+              values (
+                N'${name}',
+                N'${phone}',
+                N'${birthday}',
+                N'${email}',
+                N'${role}',
+                N'${password}',
+                ${active == undefined || active == '0' ? 0 : 1})`;
+                db.query(sql, function (err, result) {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(result);
+                });
+            }
+        } catch (error) {
+            console.log(error)
+
+
+            reject(error);
+        }
+    })
   },
 };

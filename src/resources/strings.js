@@ -16,7 +16,10 @@ module.exports = {
       search: "/api/user/search",
       login: "/api/user/login",
       detail: "/api/user/detail",
-      delete: "/api/user/delete"
+      delete: "/api/user/delete",
+      update: "/api/user/update",
+      create: "/api/user/create",
+      reset: "/api/user/reset",
     },
     product: {
       search: "/api/product/search",

@@ -193,7 +193,40 @@ function index(props) {
           }
         ];
         break;
-
+      case "/admin/user/create":
+        obj = [
+          {
+            icon: "fal fa-home mr-1",
+            url: "/admin",
+            name: "Home"
+          },
+          {
+            name: "Quản lý danh mục"
+          },
+          {
+            url: "/admin/user",
+            name: "Danh mục tài khoản"
+          },
+          {
+            name: "Tạo mới tài khoản"
+          }
+        ];
+        break;
+      case "/admin/user":
+        obj = [
+          {
+            icon: "fal fa-home mr-1",
+            url: "/admin",
+            name: "Home"
+          },
+          {
+            name: "Quản lý danh mục"
+          },
+          {
+            name: "Danh mục tài khoản"
+          }
+        ];
+        break;
       default:
         if (url.indexOf("/admin/job/edit") == 0) {
           obj = [
@@ -267,8 +300,9 @@ function index(props) {
                     name: "Chỉnh sửa công việc"
                   }
                 ];
-              } else if (url.indexOf("/time-sheet") == 0) {
-                obj = [
+              } else {
+                  if (url.indexOf("/time-sheet") == 0) {
+                  obj = [
                   {
                     icon: "fal fa-home mr-1",
                     url: "/admin",
@@ -282,7 +316,48 @@ function index(props) {
                     name: "Chi tiết công việc"
                   }
                 ];
+              } else {
+                if (url.indexOf("/admin/user/detail") == 0) {
+                  obj = [
+                    {
+                      icon: "fal fa-home mr-1",
+                      url: "/admin",
+                      name: "Home"
+                    },
+                    {
+                      name: "Quản lý danh mục"
+                    },
+                    {
+                      url: "/admin/user",
+                      name: "Danh mục tài khoản"
+                    },
+                    {
+                      name: "Chi tiết tài khoản"
+                    }
+                  ];
+                } else{
+                  if (url.indexOf("/admin/user/edit") == 0) {
+                    obj = [
+                      {
+                        icon: "fal fa-home mr-1",
+                        url: "/admin",
+                        name: "Home"
+                      },
+                      {
+                        name: "Quản lý danh mục"
+                      },
+                      {
+                        url: "/admin/user",
+                        name: "Danh mục tài khoản"
+                      },
+                      {
+                        name: "Chỉnh sửa tài khoản"
+                      }
+                    ];
+                  }
+                }
               }
+            }
             }
           }
         }
